@@ -1,0 +1,128 @@
+plugins {
+    id 'com.android.application'
+    id 'androidx.navigation.safeargs'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+}
+
+def apikeyPropertiesFile = rootProject.file("local.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
+android {
+    compileSdk rootProject.COMPILE_SDK
+
+    defaultConfig {
+        applicationId "com.example.films"
+        minSdk rootProject.MIN_SDK
+        targetSdk rootProject.TARGET_SDK
+        versionCode 1
+        versionName "1.0"
+        // should correspond to key/value pairs inside the file
+        buildConfigField("String", "TMDB_API_KEY", apikeyProperties['TMDB_API_KEY'])
+        buildConfigField("String", "YT_API_KEY", apikeyProperties['YT_API_KEY'])
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+    namespace 'com.example.films'
+}
+
+dependencies {
+
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$material"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
+    implementation "androidx.legacy:legacy-support-v4:$legacy"
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$junit_android"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_android"
+
+    // Kotlin Extensions
+    implementation "androidx.core:core-ktx:$ktx"
+
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
+
+    // Kotlin Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialization_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlin_serialization_converter_version"
+
+    // Jetpack Navigation - Java
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+    // Jetpack Navigation - Kotlin
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation"
+
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigation"
+
+    // Dagger Hilt
+    annotationProcessor "com.google.dagger:hilt-android-compiler:$dagger_hilt_compiler"
+    annotationProcessor "androidx.hilt:hilt-compiler:$hilt_compiler"
+    implementation "com.google.dagger:hilt-android:$dagger_hilt"
+    kapt "com.google.dagger:hilt-compiler:$dagger_hilt"
+
+    //RxJava
+    implementation "io.reactivex.rxjava3:rxandroid:$rx_java"
+    implementation "io.reactivex.rxjava3:rxjava:$rx_java"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.github.akarnokd:rxjava3-retrofit-adapter:$rx_java_retrofit_adapter"
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor"
+
+    // Lifecycle Kotlin Extensions
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ktx"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx"
+
+    //Room
+    implementation "androidx.room:room-runtime:$room"
+    annotationProcessor "androidx.room:room-compiler:$room"
+    implementation "androidx.room:room-ktx:$room"
+    kapt "androidx.room:room-compiler:$room"
+    implementation "androidx.room:room-rxjava3:$room"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+    implementation "com.zlc.glide:webpdecoder:$glide_webp_decoder"
+
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:$work_manager"
+
+    // Google Play
+    implementation "com.google.android.play:core-ktx:$google_play"
+
+    // Youtube
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+
+}
